@@ -20,7 +20,6 @@ crash.log
 .terraform/environments/
 
 # Ignore sensitive variables
-*.tfvars
 *.tfvars.json
 
 # Ignore any personal settings or IDE files

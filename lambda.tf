@@ -4,13 +4,13 @@ resource "aws_lambda_function" "payment_processor" {
   runtime       = "python3.9"
   role          = aws_iam_role.lambda_exec.arn
   handler       = "payment_processor.lambda_handler"
-  filename      = "package.zip" # Path to your packaged Lambda code
+  filename      = "lambda/payment_processor.zip" # Path to your packaged Lambda code
 
   # Environment variables passed to the Lambda function
   environment {
     variables = {
       DYNAMODB_TABLE = aws_dynamodb_table.payment_ledger.name
-      KMS_KEY_ID     = aws_kms_key.payment_key.key_id  # Add the KMS key ID to environment variables
+      KMS_KEY_ID     = aws_kms_key.payment_key.key_id # Add the KMS key ID to environment variables
     }
   }
 

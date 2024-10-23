@@ -64,7 +64,8 @@ This project implements a secure payment processing workflow, leveraging AWS ser
   terraform apply
 
 
-  # Payment Encryption and Storage Using AWS Lambda, KMS, and DynamoDB
+
+## Payment Encryption and Storage Using AWS Lambda, KMS, and DynamoDB
 
 This project provides an AWS Lambda function designed to securely handle payment processing by encrypting credit card metadata and storing the encrypted data in an AWS DynamoDB table. The function utilizes AWS Key Management Service (KMS) for encryption, ensuring the security and compliance of sensitive payment information.
 

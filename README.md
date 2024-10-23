@@ -62,3 +62,52 @@ This project implements a secure payment processing workflow, leveraging AWS ser
   ```bash
   terraform init
   terraform apply
+
+
+  # Payment Encryption and Storage Using AWS Lambda, KMS, and DynamoDB
+
+This project provides an AWS Lambda function designed to securely handle payment processing by encrypting credit card metadata and storing the encrypted data in an AWS DynamoDB table. The function utilizes AWS Key Management Service (KMS) for encryption, ensuring the security and compliance of sensitive payment information.
+
+## Overview
+
+The Lambda function performs the following steps:
+
+1. **Receiving Event Data**:
+   - The function is triggered by an event containing credit card metadata, expected to be passed under the key `'card_data'`. 
+   - If the `'card_data'` is not found in the incoming event, the function returns a `400` status code with an error message indicating "Missing card data."
+
+2. **Encrypting the Data Using KMS**:
+   - The function encrypts the credit card metadata using AWS KMS.
+   - The `encrypt_data` function converts the metadata to a JSON string, encodes it into bytes, and encrypts it using the KMS key specified by the `KMS_KEY_ID` environment variable.
+   - The encrypted result is a binary blob (`CiphertextBlob`), which represents the encrypted version of the credit card metadata.
+
+3. **Storing Encrypted Data in DynamoDB**:
+   - The encrypted data is then stored in a DynamoDB table.
+   - The `store_in_dynamodb` function generates a unique `transaction_id` based on the hash of the encrypted data and stores it along with the encrypted data in the DynamoDB table specified by the `DYNAMODB_TABLE` environment variable.
+
+## Prerequisites
+
+Before deploying this function, ensure that you have:
+- An AWS account with permissions to use Lambda, KMS, and DynamoDB.
+- A KMS key configured for encryption.
+- A DynamoDB table set up to store the encrypted data.
+
+## Environment Variables
+
+The Lambda function requires the following environment variables:
+- `DYNAMODB_TABLE`: The name of the DynamoDB table where encrypted data will be stored.
+- `KMS_KEY_ID`: The ID of the KMS key used to encrypt the payment metadata.
+
+## Example Usage
+
+When the function is triggered with an event containing the following JSON:
+
+```json
+{
+    "card_data": {
+        "card_number": "4111111111111111",
+        "expiry_date": "12/25",
+        "card_holder": "John Doe"
+    }
+}
+
